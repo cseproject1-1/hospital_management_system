@@ -63,3 +63,16 @@ int searchAppointmentByID(int id) {
 
     return -1;
 }
+
+int checkUsernameExists(char username[]) {
+    int i;
+
+    // Check if username already exists
+    for(i = 0; i < doctorCount; i = i + 1) {
+        if(strcmp(doctors[i].username, username) == 0) {
+            return 1; // Username exists
+        }
+    }
+
+    return 0; // Username doesn't exist
+}

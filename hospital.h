@@ -1,6 +1,7 @@
 // hospital.h - Header file with all definitions
 
-
+#ifndef HOSPITAL_H
+#define HOSPITAL_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +26,7 @@ struct Patient {
     char admissionDate[15];
 };
 
-// Doctor structure
+// Doctor structure - with authentication
 struct Doctor {
     int id;
     char name[50];
@@ -33,6 +34,9 @@ struct Doctor {
     char contact[15];
     int experience;
     float consultationFee;
+    char username[30];
+    char password[30];
+    int isRegistered; // 1 = registered, 0 = not registered
 };
 
 // Appointment structure
@@ -68,7 +72,18 @@ extern int doctorCount;
 extern int appointmentCount;
 extern int recordCount;
 
-// Function declarations
+// Global variable for logged in doctor
+extern int loggedInDoctorId;
+
+// Authentication functions
+int doctorLogin();
+void doctorRegister();
+void doctorDashboard(int doctorId);
+void viewMyPatients(int doctorId);
+void viewMyAppointments(int doctorId);
+void viewMyRecords(int doctorId);
+
+// Patient functions
 void patientMenu();
 void addPatient();
 void viewAllPatients();
@@ -76,28 +91,33 @@ void searchPatient();
 void updatePatient();
 void deletePatient();
 
+// Doctor functions (Admin)
 void doctorMenu();
 void addDoctor();
 void viewAllDoctors();
 void searchDoctor();
 void updateDoctor();
 
+// Appointment functions
 void appointmentMenu();
 void bookAppointment();
 void viewAllAppointments();
 void cancelAppointment();
 void viewTodayAppointments();
 
+// Medical record functions
 void medicalRecordsMenu();
 void addDiagnosis();
 void viewPatientHistory();
 void addPrescription();
 
+// Report functions
 void reportsMenu();
 void generatePatientStats();
 void generateDoctorSchedule();
 void generateRevenueReport();
 
+// File functions
 void savePatients();
 void loadPatients();
 void saveDoctors();
@@ -107,10 +127,13 @@ void loadAppointments();
 void saveRecords();
 void loadRecords();
 
+// Helper functions
 int searchPatientByID(int id);
 int searchDoctorByID(int id);
 int searchAppointmentByID(int id);
+int checkUsernameExists(char username[]);
 void clearBuffer();
 void pressEnter();
 void showHeader(char *title);
 
+#endif
