@@ -1,0 +1,31 @@
+# Binary files
+*.dat
+*.exe
+*.bin
+*.o
+*.obj
+
+# Build artifacts
+bin/
+obj/
+Debug/
+Release/
+
+# IDE files
+*.cbp
+*.layout
+*.depend
+*.workspace
+*.project
+
+# Generated files
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Crush configuration directory
+.crush/
