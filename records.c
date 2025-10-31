@@ -11,8 +11,8 @@ void medicalRecordsMenu() {
         printf("2. View Patient History\n");
         printf("3. Add Prescription\n");
         printf("4. Back to Main Menu\n");
-        printf("\nEnter your choice: ");
-        scanf("%d", &choice);
+         printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &choice);printf(RESET);
         clearBuffer();
 
         if(choice == 1) {

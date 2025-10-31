@@ -13,8 +13,8 @@ void patientMenu() {
         printf("4. Update Patient\n");
         printf("5. Delete Patient\n");
         printf("6. Back to Main Menu\n");
-        printf("\nEnter your choice: ");
-        scanf("%d", &choice);
+         printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &choice);printf(RESET);
         clearBuffer();
 
         if(choice == 1) {

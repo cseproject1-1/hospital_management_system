@@ -168,8 +168,8 @@ void doctorDashboard(int doctorId) {
         printf("4. Add Medical Record\n");
         printf("5. Logout\n");
         printf("=========================================\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+         printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &choice);printf(RESET);
         clearBuffer();
 
         if(choice == 1) {
@@ -328,9 +328,9 @@ void doctorMenu() {
         printf("3. Search Doctor\n");
         printf("4. Update Doctor\n");
         printf("5. Back to Admin Menu\n");
-        printf("\nEnter your choice: ");
-        scanf("%d", &choice);
-        clearBuffer();
+         printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &choice);printf(RESET);
+         clearBuffer();
 
         if(choice == 1) {
             addDoctor();
@@ -449,9 +449,9 @@ void searchDoctor() {
     showHeader("SEARCH DOCTOR");
     printf("1. Search by ID\n");
     printf("2. Search by Specialization\n");
-    printf("Enter choice: ");
-    scanf("%d", &choice);
-    clearBuffer();
+     printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &choice);printf(RESET);
+        clearBuffer();
 
     if(choice == 1) {
         int id;

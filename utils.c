@@ -1,6 +1,13 @@
 // utils.c - Utility and helper functions
 
 #include "hospital.h"
+void delay(float sec)
+{
+    for(long long i=0;i<sec*10000000;i++)
+    {
+        //loading animation
+    }
+}
 
 void clearBuffer() {
     int c;
@@ -20,7 +27,7 @@ void pressEnter() {
 void showHeader(char *title) {
     printf("\n");
     printf("====================================\n");
-    printf("  %s\n", title);
+    printf(RED"  %s\n"RESET, title);
     printf("====================================\n");
     printf("\n");
 }

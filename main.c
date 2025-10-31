@@ -23,22 +23,51 @@ int main() {
     loadAppointments();
     loadRecords();
 
-    printf("\n=========================================\n");
-    printf("   HOSPITAL MANAGEMENT SYSTEM\n");
-    printf("=========================================\n");
 
+    char banner[]="\n|   \033[1m \033[91m HOSPITAL MANAGEMENT SYSTEM            \033[0m|\n";
+    for(int i=15;banner[i]!='\0';i++)
+    {
+        delay(.5);
+        printf("=");
+    }
+    for(int i=0;banner[i]!=NULL;i++)
+    {
+        delay(1);
+        printf("%c",banner[i]);
+    }
+     for(int i=15;banner[i]!=NULL;i++)
+    {
+        delay(.5);
+        printf("=");
+    }
+    printf("\n");
+    char banner2[]="\n|  \033[1m \033[91m    MAIN MENU          \033[0m |\n";
     // Main loop
     while(1) {
-        printf("\n=========================================\n");
-        printf("           MAIN MENU\n");
-        printf("=========================================\n");
-        printf("1. Doctor Login\n");
-        printf("2. Doctor Registration\n");
-        printf("3. Admin/Staff Panel\n");
-        printf("4. Exit\n");
-        printf("=========================================\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+       for(int i=15;banner2[i]!='\0';i++)
+    {
+        delay(.5);
+        printf("=");
+    }
+    for(int i=0;banner2[i]!=NULL;i++)
+    {
+        delay(1);
+        printf("%c",banner2[i]);
+    }
+     for(int i=15;banner2[i]!=NULL;i++)
+    {
+        delay(.5);
+        printf("=");
+    }
+    printf("\n");delay(2);
+        printf("1. Doctor Login\n");delay(2);
+        printf("2. Doctor Registration\n");delay(2);
+        printf("3. Admin/Staff Panel\n");delay(2);
+        printf("4. Exit\n");delay(2);
+        printf("=========================================\n");delay(2);
+        printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &choice);printf(RESET);
+
         clearBuffer();
 
         // Check choice using if-else
@@ -58,29 +87,45 @@ int main() {
         else if(choice == 3) {
             // Admin/Staff Panel - needs password
             char password[20];
-            printf("\nEnter Admin Password: ");
-            scanf("%s", password);
+            printf("\nEnter Admin Password\033[33;6;91m:\033[0m  ");
+            printf(YELLOW);scanf("%s", password);printf(RESET);
             clearBuffer();
 
-            if(strcmp(password, "admin123") == 0) {
-                printf("\nAccess Granted!\n");
+            if(strcmp(password, "2407020") == 0) {
+                printf(GREEN"\nAccess Granted!\n"RESET);
                 pressEnter();
 
                 // Admin submenu
                 int adminChoice;
-                while(1) {
-                    printf("\n=========================================\n");
-                    printf("         ADMIN/STAFF PANEL\n");
-                    printf("=========================================\n");
-                    printf("1. Patient Management\n");
-                    printf("2. Doctor Management\n");
-                    printf("3. Appointment Management\n");
-                    printf("4. Medical Records\n");
-                    printf("5. Reports\n");
-                    printf("6. Back to Main Menu\n");
-                    printf("=========================================\n");
-                    printf("Enter your choice: ");
-                    scanf("%d", &adminChoice);
+                 char banner3[]="\n| \033[91m  \033[1m \033[91m          ADMIN/STAFF PANEL          \033[0m|\n";
+                while(1) {system("cls");
+                    for(int i=20;banner3[i]!='\0';i++)
+                        {
+                                delay(.5);
+                                printf("=");
+                                }
+                        for(int i=0;banner3[i]!=NULL;i++)
+                    {
+                            delay(1);
+                            printf("%c",banner3[i]);
+                        }
+                            for(int i=20;banner3[i]!=NULL;i++)
+                            {
+                                   delay(.5);
+                                    printf("=");
+                            }
+
+                    printf("\n");delay(.5);
+                    printf("1. Patient Management\n");delay(.5);
+                    printf("2. Doctor Management\n");delay(.5);
+                    printf("3. Appointment Management\n");delay(.5);
+                    printf("4. Medical Records\n");delay(.5);
+                    printf("5. Reports\n");delay(.5);
+                    printf("6. Back to Main Menu\n");delay(.5);
+                    printf("=========================================\n");delay(.5);
+                    printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &adminChoice);printf(RESET);
+
                     clearBuffer();
 
                     if(adminChoice == 1) {
@@ -108,18 +153,36 @@ int main() {
                 }
             }
             else {
-                printf("\nAccess Denied! Wrong password.\n");
-                pressEnter();
+                printf(RED"\nAccess Denied! Wrong password.\n"RESET);
+                pressEnter();system("cls");
             }
         }
-        else if(choice == 4) {
-            printf("\n=========================================\n");
-            printf("   Thank you for using HMS!\n");
-            printf("   Goodbye!\n");
-            printf("=========================================\n");
-            break;
+        else if(choice == 4) {system("cls");
+          char banner4[]="\n| \033[1m \033[91m Thank you for using HMS! \033[0m|";
+          char banner5[]="\n|     \033[1m \033[91m   Goodbye!           \033[0m|\n";
+            for(int i=15;banner4[i]!='\0';i++)
+    {
+        delay(.5);
+        printf("=");
+    }
+    for(int i=0;banner4[i]!=NULL;i++)
+    {
+        delay(1);
+        printf("%c",banner4[i]);
+    }
+     for(int i=0;banner5[i]!=NULL;i++)
+    {
+        delay(1);
+        printf("%c",banner5[i]);
+    }
+     for(int i=15;banner4[i]!=NULL;i++)
+    {
+        delay(.5);
+        printf("=");
+    }break;
         }
-        else {
+
+        else {system("cls");
             printf("\nInvalid choice! Please try again.\n");
         }
     }
