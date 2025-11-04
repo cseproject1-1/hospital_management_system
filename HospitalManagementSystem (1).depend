@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1762237820 source:c:\users\qbits\downloads\hospital-management-system\appointment.c
+	"hospital.h"
+
+1762238516 c:\users\qbits\downloads\hospital-management-system\hospital.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1762237820 source:c:\users\qbits\downloads\hospital-management-system\doctor.c
+	"hospital.h"
+
+1762237820 source:c:\users\qbits\downloads\hospital-management-system\doctor_dashboard.c
+	"hospital.h"
+
+1762234945 source:c:\users\qbits\downloads\hospital-management-system\fileops.c
+	"hospital.h"
+
+1762238646 source:c:\users\qbits\downloads\hospital-management-system\main.c
+	"hospital.h"
+
+1762237820 source:c:\users\qbits\downloads\hospital-management-system\patient.c
+	"hospital.h"
+
+1762237820 source:c:\users\qbits\downloads\hospital-management-system\reports.c
+	"hospital.h"
+
+1762237559 source:c:\users\qbits\downloads\hospital-management-system\utils.c
+	"hospital.h"
+
+1762237820 source:c:\users\qbits\downloads\hospital-management-system\records.c
+	"hospital.h"
+

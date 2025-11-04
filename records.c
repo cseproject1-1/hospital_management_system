@@ -1,241 +1,380 @@
-// records.c - Medical records management functions
-
 #include "hospital.h"
 
-void medicalRecordsMenu() {
+void medicalRecordsMenu(void) {
     int choice;
+    int running;
 
-    while(1) {
-        showHeader("MEDICAL RECORDS");
-        printf("1. Add Diagnosis\n");
+    running = 1;
+
+    while(running == 1) {
+        printf("\n");
+        showHeader("MEDICAL RECORDS MANAGEMENT");
+        printf("1. Add Diagnosis/Record\n");
         printf("2. View Patient History\n");
-        printf("3. Add Prescription\n");
-        printf("4. Back to Main Menu\n");
-        printf("\nEnter your choice: ");
-        scanf("%d", &choice);
+        printf("3. Add Prescription to Record\n");
+        printf("4. Back to Admin Menu\n");
+        printf("=========================================\n");
+           printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &choice);printf(RESET);
+
         clearBuffer();
 
-        if(choice == 1) {
-            addDiagnosis();
-        }
-        else if(choice == 2) {
-            viewPatientHistory();
-        }
-        else if(choice == 3) {
-            addPrescription();
-        }
-        else if(choice == 4) {
-            printf("\nGoing back...\n");
-            break;
-        }
-        else {
-            printf("\nWrong choice!\n");
-        }
-
-        if(choice != 4) {
-            pressEnter();
+        switch(choice) {
+            case RECORD_ADD:
+                addDiagnosis(-1);
+                break;
+            case RECORD_VIEW_HISTORY:
+                viewPatientHistory();
+                break;
+            case RECORD_ADD_PRESCRIPTION:
+                addPrescription();
+                break;
+            case RECORD_BACK:
+                running = 0;
+                break;
+            default:
+                printf("\nInvalid choice!\n");
         }
     }
 }
 
-void addDiagnosis() {
-    showHeader("ADD DIAGNOSIS");
+void addDiagnosis(int doctorId) {
+    int newId;
+    int patId;
+    int docId;
+    int patIndex;
+    int docIndex;
 
-    // Check if full
     if(recordCount >= MAX_RECORDS) {
-        printf("\nDatabase full! Cannot add more records.\n");
+        printf("\nError: Medical records database is full!\n");
+        pressEnter();
         return;
     }
 
-    // Check patients
-    if(patientCount == 0) {
-        printf("\nNo patients in database!\n");
-        return;
-    }
+    printf("\n--- Add Medical Record ---\n");
 
-    // Create new record
-    struct MedicalRecord r;
-
-    // Auto ID
-    r.recordId = recordCount + 1;
-    printf("Record ID: %d\n\n", r.recordId);
-
-    // Get patient ID
+    /* Get patient ID */
     printf("Enter Patient ID: ");
-    scanf("%d", &r.patientId);
+    scanf("%d", &patId);
     clearBuffer();
 
-    // Check if patient exists
-    int pfound = 0;
-    int pindex = -1;
-    int i;
-    for(i = 0; i < patientCount; i = i + 1) {
-        if(patients[i].id == r.patientId) {
-            pfound = 1;
-            pindex = i;
-            break;
-        }
-    }
+    patIndex = searchPatientByID(patId);
 
-    if(pfound == 0) {
-        printf("\nPatient not found!\n");
+    if(patIndex == -1) {
+        printf("\nError: Patient not found!\n");
+        pressEnter();
         return;
     }
 
-    printf("Patient: %s\n", patients[pindex].name);
+    printf("Patient: %s\n", patients[patIndex].name);
 
-    // Get doctor ID
-    printf("Enter Doctor ID: ");
-    scanf("%d", &r.doctorId);
-    clearBuffer();
+    /* Get doctor ID */
+    if(doctorId == -1) {
+        printf("\nEnter Doctor ID: ");
+        scanf("%d", &docId);
+        clearBuffer();
 
-    // Check if doctor exists
-    int dfound = 0;
-    int dindex = -1;
-    for(i = 0; i < doctorCount; i = i + 1) {
-        if(doctors[i].id == r.doctorId) {
-            dfound = 1;
-            dindex = i;
-            break;
+        docIndex = searchDoctorByID(docId);
+
+        if(docIndex == -1) {
+            printf("\nError: Doctor not found!\n");
+            pressEnter();
+            return;
         }
+    } else {
+        docId = doctorId;
+        docIndex = searchDoctorByID(docId);
     }
 
-    if(dfound == 0) {
-        printf("\nDoctor not found!\n");
-        return;
+    if(docIndex != -1) {
+        printf("Doctor: %s\n", doctors[docIndex].name);
     }
 
-    printf("Doctor: Dr. %s\n\n", doctors[dindex].name);
-
-    // Get diagnosis
-    printf("Enter diagnosis: ");
-    fgets(r.diagnosis, 200, stdin);
-    int len = strlen(r.diagnosis);
-    if(r.diagnosis[len-1] == '\n') {
-        r.diagnosis[len-1] = '\0';
+    /* Auto-generate record ID */
+    if(recordCount == 0) {
+        newId = 1;
+    } else {
+        newId = records[recordCount - 1].recordId + 1;
     }
 
-    // Get prescription
-    printf("Enter prescription: ");
-    fgets(r.prescription, 500, stdin);
-    len = strlen(r.prescription);
-    if(r.prescription[len-1] == '\n') {
-        r.prescription[len-1] = '\0';
-    }
+    records[recordCount].recordId = newId;
+    records[recordCount].patientId = patId;
+    records[recordCount].doctorId = docId;
 
-    // Get date
-    printf("Enter visit date (DD/MM/YYYY): ");
-    scanf("%s", r.visitDate);
+    /* Get diagnosis */
+    printf("\nEnter Diagnosis: ");
+    fgets(records[recordCount].diagnosis, MAX_DIAGNOSIS, stdin);
+    records[recordCount].diagnosis[strcspn(records[recordCount].diagnosis, "\n")] = 0;
+
+    /* Get prescription */
+    printf("Enter Prescription: ");
+    fgets(records[recordCount].prescription, MAX_PRESCRIPTION, stdin);
+    records[recordCount].prescription[strcspn(records[recordCount].prescription, "\n")] = 0;
+
+    /* Get visit date */
+    printf("Enter Visit Date (DD/MM/YYYY): ");
+    fgets(records[recordCount].visitDate, 15, stdin);
+    records[recordCount].visitDate[strcspn(records[recordCount].visitDate, "\n")] = 0;
+
+    /* Get treatment cost */
+    printf("Enter Treatment Cost: Rs. ");
+    scanf("%f", &records[recordCount].treatmentCost);
     clearBuffer();
 
-    // Get cost
-    printf("Enter treatment cost: $");
-    scanf("%f", &r.treatmentCost);
-    clearBuffer();
-
-    // Add to array
-    records[recordCount] = r;
     recordCount = recordCount + 1;
-
-    // Save
     saveRecords();
 
     printf("\nMedical record added successfully!\n");
-    printf("Record ID: %d\n", r.recordId);
+    printf("Record ID: %d\n", newId);
+    pressEnter();
 }
 
-void viewPatientHistory() {
-    int patientId;
+void viewPatientHistory(void) {
+    int patId;
+    int patIndex;
+    int i;
+    int found;
+    int docIndex;
 
-    showHeader("PATIENT MEDICAL HISTORY");
-
+    printf("\n--- View Patient History ---\n");
     printf("Enter Patient ID: ");
-    scanf("%d", &patientId);
+    scanf("%d", &patId);
     clearBuffer();
 
-    // Check if patient exists
-    int pfound = 0;
-    int pindex = -1;
-    int i;
-    for(i = 0; i < patientCount; i = i + 1) {
-        if(patients[i].id == patientId) {
-            pfound = 1;
-            pindex = i;
-            break;
-        }
-    }
+    patIndex = searchPatientByID(patId);
 
-    if(pfound == 0) {
+    if(patIndex == -1) {
         printf("\nPatient not found!\n");
+        pressEnter();
         return;
     }
 
-    printf("\nMedical History for: %s (ID: %d)\n", patients[pindex].name, patientId);
-    printf("====================================================================\n\n");
+    printf("\n--- Medical History for %s ---\n", patients[patIndex].name);
 
-    int found = 0;
+    found = 0;
+    i = 0;
 
-    // Loop through records
-    for(i = 0; i < recordCount; i = i + 1) {
-        if(records[i].patientId == patientId) {
-            // Find doctor name
-            char dname[50] = "Unknown";
-            int j;
-            for(j = 0; j < doctorCount; j = j + 1) {
-                if(doctors[j].id == records[i].doctorId) {
-                    strcpy(dname, doctors[j].name);
-                    break;
-                }
+    while(i < recordCount) {
+        if(records[i].patientId == patId) {
+            if(found == 0) {
+                found = 1;
             }
 
-            printf("Record ID: %d\n", records[i].recordId);
-            printf("Date: %s\n", records[i].visitDate);
-            printf("Doctor: %s\n", dname);
+            printf("\n--- Record #%d ---\n", records[i].recordId);
+
+            docIndex = searchDoctorByID(records[i].doctorId);
+            if(docIndex != -1) {
+                printf("Doctor: Dr. %s\n", doctors[docIndex].name);
+            } else {
+                printf("Doctor ID: %d\n", records[i].doctorId);
+            }
+
+            printf("Visit Date: %s\n", records[i].visitDate);
             printf("Diagnosis: %s\n", records[i].diagnosis);
             printf("Prescription: %s\n", records[i].prescription);
-            printf("Cost: $%.2f\n", records[i].treatmentCost);
-            printf("========================================================\n");
-            found = 1;
+            printf("Treatment Cost: Rs. %.2f\n", records[i].treatmentCost);
         }
+        i = i + 1;
     }
 
     if(found == 0) {
-        printf("No medical records found for this patient.\n");
+        printf("\nNo medical records found for this patient.\n");
     }
+
+    pressEnter();
 }
 
-void addPrescription() {
-    int recordId;
+void addPrescription(void) {
+    int recId;
+    int index;
+    int i;
+    int found;
 
-    showHeader("ADD PRESCRIPTION");
-
+    printf("\n--- Add Prescription to Record ---\n");
     printf("Enter Record ID: ");
-    scanf("%d", &recordId);
+    scanf("%d", &recId);
     clearBuffer();
 
-    // Find record
-    int index = -1;
-    int i;
-    for(i = 0; i < recordCount; i = i + 1) {
-        if(records[i].recordId == recordId) {
+    found = 0;
+    index = -1;
+    i = 0;
+
+    while(i < recordCount) {
+        if(records[i].recordId == recId) {
+            found = 1;
             index = i;
             break;
         }
+        i = i + 1;
     }
 
-    if(index == -1) {
+    if(found == 0) {
         printf("\nRecord not found!\n");
+        pressEnter();
         return;
     }
 
     printf("\nCurrent Prescription: %s\n", records[index].prescription);
-    printf("\nEnter new/updated prescription: ");
-    fgets(records[index].prescription, 500, stdin);
-    int len = strlen(records[index].prescription);
-    if(records[index].prescription[len-1] == '\n') {
-        records[index].prescription[len-1] = '\0';
-    }
+    printf("\nEnter New Prescription: ");
+    fgets(records[index].prescription, MAX_PRESCRIPTION, stdin);
+    records[index].prescription[strcspn(records[index].prescription, "\n")] = 0;
 
     saveRecords();
+
     printf("\nPrescription updated successfully!\n");
+    pressEnter();
+}
+
+void updatePatient(void) {
+    int patId;
+    int patIndex;
+    int valid;
+
+    printf("\n--- Update Patient Information ---\n");
+    printf("Enter Patient ID to update: ");
+    scanf("%d", &patId);
+    clearBuffer();
+
+    patIndex = searchPatientByID(patId);
+
+    if (patIndex == -1) {
+        printf("\nError: Patient not found!\n");
+        pressEnter();
+        return;
+    }
+
+    printf("\n--- Updating Patient ID: %d ---\n", patId);
+    printf("Current Name: %s\n", patients[patIndex].name);
+    printf("Enter New Patient Name (or press Enter to keep current): ");
+    fgets(patients[patIndex].name, MAX_NAME, stdin);
+    patients[patIndex].name[strcspn(patients[patIndex].name, "\n")] = 0;
+
+
+    printf("Current Age: %d\n", patients[patIndex].age);
+    valid = 0;
+    while(valid == 0) {
+        printf("Enter New Age (0-120): ");
+        scanf("%d", &patients[patIndex].age);
+        clearBuffer();
+
+        if(patients[patIndex].age >= 0 && patients[patIndex].age <= 120) {
+            valid = 1;
+        } else {
+            printf("Invalid age! Please enter between 0 and 120.\n");
+        }
+    }
+
+    printf("Current Gender: %c\n", patients[patIndex].gender);
+    valid = 0;
+    while(valid == 0) {
+        printf("Enter New Gender (M/F): ");
+        scanf("%c", &patients[patIndex].gender);
+        clearBuffer();
+
+        if(patients[patIndex].gender == 'M' || patients[patIndex].gender == 'm' ||
+           patients[patIndex].gender == 'F' || patients[patIndex].gender == 'f') {
+            if(patients[patIndex].gender == 'm') {
+                patients[patIndex].gender = 'M';
+            }
+            if(patients[patIndex].gender == 'f') {
+                patients[patIndex].gender = 'F';
+            }
+            valid = 1;
+        } else {
+            printf("Invalid gender! Please enter M or F.\n");
+        }
+    }
+
+    printf("Current Blood Group: %s\n", patients[patIndex].bloodGroup);
+    valid = 0;
+    while(valid == 0) {
+        printf("Enter New Blood Group (A+, A-, B+, B-, AB+, AB-, O+, O-): ");
+        fgets(patients[patIndex].bloodGroup, 5, stdin);
+        patients[patIndex].bloodGroup[strcspn(patients[patIndex].bloodGroup, "\n")] = 0;
+
+        if(strcmp(patients[patIndex].bloodGroup, "A+") == 0 ||
+           strcmp(patients[patIndex].bloodGroup, "A-") == 0 ||
+           strcmp(patients[patIndex].bloodGroup, "B+") == 0 ||
+           strcmp(patients[patIndex].bloodGroup, "B-") == 0 ||
+           strcmp(patients[patIndex].bloodGroup, "AB+") == 0 ||
+           strcmp(patients[patIndex].bloodGroup, "AB-") == 0 ||
+           strcmp(patients[patIndex].bloodGroup, "O+") == 0 ||
+           strcmp(patients[patIndex].bloodGroup, "O-") == 0) {
+            valid = 1;
+        } else {
+            printf("Invalid blood group!\n");
+        }
+    }
+
+    printf("Current Contact: %s\n", patients[patIndex].contact);
+    printf("Enter New Contact Number (10 digits): ");
+    fgets(patients[patIndex].contact, MAX_CONTACT, stdin);
+    patients[patIndex].contact[strcspn(patients[patIndex].contact, "\n")] = 0;
+
+    printf("Current Address: %s\n", patients[patIndex].address);
+    printf("Enter New Address: ");
+    fgets(patients[patIndex].address, MAX_ADDRESS, stdin);
+    patients[patIndex].address[strcspn(patients[patIndex].address, "\n")] = 0;
+
+    printf("Current Disease: %s\n", patients[patIndex].disease);
+    printf("Enter New Disease/Condition: ");
+    fgets(patients[patIndex].disease, 50, stdin);
+    patients[patIndex].disease[strcspn(patients[patIndex].disease, "\n")] = 0;
+
+    printf("Current Admission Date: %s\n", patients[patIndex].admissionDate);
+    printf("Enter New Admission Date (DD/MM/YYYY): ");
+    fgets(patients[patIndex].admissionDate, 15, stdin);
+    patients[patIndex].admissionDate[strcspn(patients[patIndex].admissionDate, "\n")] = 0;
+
+    savePatients();
+    printf("\nPatient information updated successfully!\n");
+    pressEnter();
+}
+
+void deletePatient(void) {
+    int patId;
+    int patIndex;
+    char confirm;
+    int i;
+
+    printf("\n--- Delete Patient ---\n");
+    printf("Enter Patient ID to delete: ");
+    scanf("%d", &patId);
+    clearBuffer();
+
+    patIndex = searchPatientByID(patId);
+
+    if (patIndex == -1) {
+        printf("\nError: Patient not found!\n");
+        pressEnter();
+        return;
+    }
+
+    printf("\n--- Patient Found ---\n");
+    printf("ID: %d\n", patients[patIndex].id);
+    printf("Name: %s\n", patients[patIndex].name);
+    printf("Age: %d\n", patients[patIndex].age);
+    printf("Gender: %c\n", patients[patIndex].gender);
+    printf("Blood Group: %s\n", patients[patIndex].bloodGroup);
+    printf("Contact: %s\n", patients[patIndex].contact);
+    printf("Address: %s\n", patients[patIndex].address);
+    printf("Disease: %s\n", patients[patIndex].disease);
+    printf("Admission Date: %s\n", patients[patIndex].admissionDate);
+
+    printf("\nAre you sure you want to delete this patient? (Y/N): ");
+    scanf(" %c", &confirm);
+    clearBuffer();
+
+    if (confirm == 'Y' || confirm == 'y') {
+        for (i = patIndex; i < patientCount - 1; i++) {
+            patients[i] = patients[i + 1];
+        }
+        patientCount--;
+        savePatients();
+        printf("\nPatient deleted successfully!\n");
+    } else {
+        printf("\nDeletion cancelled.\n");
+    }
+
+    pressEnter();
 }

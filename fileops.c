@@ -1,13 +1,12 @@
-// fileops.c - File operations for saving and loading data
-
 #include "hospital.h"
 
-void savePatients() {
+void savePatients(void) {
     FILE *file;
+
     file = fopen("patients.dat", "wb");
 
     if(file == NULL) {
-        printf("Error: Cannot save patient data!\n");
+        printf("Error: Cannot open patients file for writing!\n");
         return;
     }
 
@@ -15,40 +14,35 @@ void savePatients() {
     fclose(file);
 }
 
-void loadPatients() {
+void loadPatients(void) {
     FILE *file;
+    int count;
+
     file = fopen("patients.dat", "rb");
 
     if(file == NULL) {
-        printf("No previous patient data found. Starting fresh.\n");
+        printf("No patient data file found. Starting fresh.\n");
         patientCount = 0;
         return;
     }
 
-    patientCount = 0;
-
-    // Read patients one by one
-    while(1) {
-        int result = fread(&patients[patientCount], sizeof(struct Patient), 1, file);
-
-        if(result == 1) {
-            patientCount = patientCount + 1;
-        }
-        else {
-            break;
-        }
+    count = 0;
+    while(fread(&patients[count], sizeof(struct Patient), 1, file) == 1) {
+        count = count + 1;
     }
 
+    patientCount = count;
     fclose(file);
-    printf("Loaded %d patient record(s).\n", patientCount);
+    printf("Loaded %d patient records.\n", patientCount);
 }
 
-void saveDoctors() {
+void saveDoctors(void) {
     FILE *file;
+
     file = fopen("doctors.dat", "wb");
 
     if(file == NULL) {
-        printf("Error: Cannot save doctor data!\n");
+        printf("Error: Cannot open doctors file for writing!\n");
         return;
     }
 
@@ -56,40 +50,35 @@ void saveDoctors() {
     fclose(file);
 }
 
-void loadDoctors() {
+void loadDoctors(void) {
     FILE *file;
+    int count;
+
     file = fopen("doctors.dat", "rb");
 
     if(file == NULL) {
-        printf("No previous doctor data found. Starting fresh.\n");
+        printf("No doctor data file found. Starting fresh.\n");
         doctorCount = 0;
         return;
     }
 
-    doctorCount = 0;
-
-    // Read doctors one by one
-    while(1) {
-        int result = fread(&doctors[doctorCount], sizeof(struct Doctor), 1, file);
-
-        if(result == 1) {
-            doctorCount = doctorCount + 1;
-        }
-        else {
-            break;
-        }
+    count = 0;
+    while(fread(&doctors[count], sizeof(struct Doctor), 1, file) == 1) {
+        count = count + 1;
     }
 
+    doctorCount = count;
     fclose(file);
-    printf("Loaded %d doctor record(s).\n", doctorCount);
+    printf("Loaded %d doctor records.\n", doctorCount);
 }
 
-void saveAppointments() {
+void saveAppointments(void) {
     FILE *file;
+
     file = fopen("appointments.dat", "wb");
 
     if(file == NULL) {
-        printf("Error: Cannot save appointment data!\n");
+        printf("Error: Cannot open appointments file for writing!\n");
         return;
     }
 
@@ -97,40 +86,35 @@ void saveAppointments() {
     fclose(file);
 }
 
-void loadAppointments() {
+void loadAppointments(void) {
     FILE *file;
+    int count;
+
     file = fopen("appointments.dat", "rb");
 
     if(file == NULL) {
-        printf("No previous appointment data found. Starting fresh.\n");
+        printf("No appointment data file found. Starting fresh.\n");
         appointmentCount = 0;
         return;
     }
 
-    appointmentCount = 0;
-
-    // Read appointments one by one
-    while(1) {
-        int result = fread(&appointments[appointmentCount], sizeof(struct Appointment), 1, file);
-
-        if(result == 1) {
-            appointmentCount = appointmentCount + 1;
-        }
-        else {
-            break;
-        }
+    count = 0;
+    while(fread(&appointments[count], sizeof(struct Appointment), 1, file) == 1) {
+        count = count + 1;
     }
 
+    appointmentCount = count;
     fclose(file);
-    printf("Loaded %d appointment record(s).\n", appointmentCount);
+    printf("Loaded %d appointment records.\n", appointmentCount);
 }
 
-void saveRecords() {
+void saveRecords(void) {
     FILE *file;
+
     file = fopen("medical_records.dat", "wb");
 
     if(file == NULL) {
-        printf("Error: Cannot save medical records!\n");
+        printf("Error: Cannot open medical records file for writing!\n");
         return;
     }
 
@@ -138,30 +122,24 @@ void saveRecords() {
     fclose(file);
 }
 
-void loadRecords() {
+void loadRecords(void) {
     FILE *file;
+    int count;
+
     file = fopen("medical_records.dat", "rb");
 
     if(file == NULL) {
-        printf("No previous medical records found. Starting fresh.\n");
+        printf("No medical records file found. Starting fresh.\n");
         recordCount = 0;
         return;
     }
 
-    recordCount = 0;
-
-    // Read records one by one
-    while(1) {
-        int result = fread(&records[recordCount], sizeof(struct MedicalRecord), 1, file);
-
-        if(result == 1) {
-            recordCount = recordCount + 1;
-        }
-        else {
-            break;
-        }
+    count = 0;
+    while(fread(&records[count], sizeof(struct MedicalRecord), 1, file) == 1) {
+        count = count + 1;
     }
 
+    recordCount = count;
     fclose(file);
-    printf("Loaded %d medical record(s).\n", recordCount);
+    printf("Loaded %d medical records.\n", recordCount);
 }

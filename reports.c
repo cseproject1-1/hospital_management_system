@@ -1,126 +1,88 @@
-// reports.c - Reports and statistics functions
-
 #include "hospital.h"
 
-void reportsMenu() {
+void reportsMenu(void) {
     int choice;
+    int running;
 
-    while(1) {
-        showHeader("REPORTS & STATISTICS");
+    running = 1;
+
+    while(running == 1) {
+        printf("\n");
+        showHeader("REPORTS AND STATISTICS");
         printf("1. Patient Statistics\n");
         printf("2. Doctor Schedule\n");
         printf("3. Revenue Report\n");
-        printf("4. Back to Main Menu\n");
-        printf("\nEnter your choice: ");
-        scanf("%d", &choice);
+        printf("4. Back to Admin Menu\n");
+        printf("=========================================\n");
+         printf("Enter your choice\033[33;6;91m:\033[0m ");
+        printf(YELLOW);scanf("%d", &choice);printf(RESET);
+
         clearBuffer();
 
-        if(choice == 1) {
-            generatePatientStats();
-        }
-        else if(choice == 2) {
-            generateDoctorSchedule();
-        }
-        else if(choice == 3) {
-            generateRevenueReport();
-        }
-        else if(choice == 4) {
-            printf("\nGoing back...\n");
-            break;
-        }
-        else {
-            printf("\nWrong choice!\n");
-        }
-
-        if(choice != 4) {
-            pressEnter();
+        switch(choice) {
+            case REPORT_PATIENT_STATS:
+                generatePatientStats();
+                break;
+            case REPORT_DOCTOR_SCHEDULE:
+                generateDoctorSchedule();
+                break;
+            case REPORT_REVENUE:
+                generateRevenueReport();
+                break;
+            case REPORT_BACK:
+                running = 0;
+                break;
+            default:
+                printf("\nInvalid choice!\n");
         }
     }
 }
 
-void generatePatientStats() {
-    showHeader("PATIENT STATISTICS");
+void generatePatientStats(void) {
+    int i;
+    int maleCount;
+    int femaleCount;
+    int bloodCounts[8];
+    int totalAge;
+    int minAge;
+    int maxAge;
+    float avgAge;
+    char *bloodGroups[8] = {"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"};
+    int j;
 
-    // Check if patients exist
     if(patientCount == 0) {
-        printf("\nNo patients to analyze!\n");
+        printf("\nNo patient data available!\n");
+        pressEnter();
         return;
     }
 
-    printf("\nOVERVIEW\n");
-    printf("========================================\n");
-    printf("Total Patients: %d\n\n", patientCount);
+    printf("\n--- Patient Statistics Report ---\n");
 
-    // Count males and females
-    int maleCount = 0;
-    int femaleCount = 0;
-    int i;
+    /* Initialize counters */
+    maleCount = 0;
+    femaleCount = 0;
+    totalAge = 0;
+    minAge = 999;
+    maxAge = 0;
 
-    for(i = 0; i < patientCount; i = i + 1) {
-        if(patients[i].gender == 'M' || patients[i].gender == 'm') {
+    j = 0;
+    while(j < 8) {
+        bloodCounts[j] = 0;
+        j = j + 1;
+    }
+
+    /* Calculate statistics */
+    i = 0;
+    while(i < patientCount) {
+        /* Gender count */
+        if(patients[i].gender == 'M') {
             maleCount = maleCount + 1;
-        }
-        else {
+        } else if(patients[i].gender == 'F') {
             femaleCount = femaleCount + 1;
         }
-    }
 
-    printf("GENDER DISTRIBUTION\n");
-    printf("========================================\n");
-    printf("Male Patients:   %d (%.1f%%)\n", maleCount,
-           (maleCount * 100.0) / patientCount);
-    printf("Female Patients: %d (%.1f%%)\n\n", femaleCount,
-           (femaleCount * 100.0) / patientCount);
-
-    // Blood group statistics
-    int aplus = 0, aminus = 0, bplus = 0, bminus = 0;
-    int abplus = 0, abminus = 0, oplus = 0, ominus = 0;
-
-    for(i = 0; i < patientCount; i = i + 1) {
-        if(strcmp(patients[i].bloodGroup, "A+") == 0) {
-            aplus = aplus + 1;
-        }
-        else if(strcmp(patients[i].bloodGroup, "A-") == 0) {
-            aminus = aminus + 1;
-        }
-        else if(strcmp(patients[i].bloodGroup, "B+") == 0) {
-            bplus = bplus + 1;
-        }
-        else if(strcmp(patients[i].bloodGroup, "B-") == 0) {
-            bminus = bminus + 1;
-        }
-        else if(strcmp(patients[i].bloodGroup, "AB+") == 0) {
-            abplus = abplus + 1;
-        }
-        else if(strcmp(patients[i].bloodGroup, "AB-") == 0) {
-            abminus = abminus + 1;
-        }
-        else if(strcmp(patients[i].bloodGroup, "O+") == 0) {
-            oplus = oplus + 1;
-        }
-        else if(strcmp(patients[i].bloodGroup, "O-") == 0) {
-            ominus = ominus + 1;
-        }
-    }
-
-    printf("BLOOD GROUP DISTRIBUTION\n");
-    printf("====================================\n");
-    if(aplus > 0) printf("A+  : %d patient(s)\n", aplus);
-    if(aminus > 0) printf("A-  : %d patient(s)\n", aminus);
-    if(bplus > 0) printf("B+  : %d patient(s)\n", bplus);
-    if(bminus > 0) printf("B-  : %d patient(s)\n", bminus);
-    if(abplus > 0) printf("AB+ : %d patient(s)\n", abplus);
-    if(abminus > 0) printf("AB- : %d patient(s)\n", abminus);
-    if(oplus > 0) printf("O+  : %d patient(s)\n", oplus);
-    if(ominus > 0) printf("O-  : %d patient(s)\n", ominus);
-
-    // Age statistics
-    int ageSum = 0;
-    int minAge = 120;
-    int maxAge = 0;
-
-    for(i = 0; i < patientCount; i = i + 1) {
-        ageSum = ageSum + patients[i].age;
+        /* Age statistics */
+        totalAge = totalAge + patients[i].age;
 
         if(patients[i].age < minAge) {
             minAge = patients[i].age;
@@ -129,137 +91,197 @@ void generatePatientStats() {
         if(patients[i].age > maxAge) {
             maxAge = patients[i].age;
         }
+
+        /* Blood group count */
+        j = 0;
+        while(j < 8) {
+            if(strcmp(patients[i].bloodGroup, bloodGroups[j]) == 0) {
+                bloodCounts[j] = bloodCounts[j] + 1;
+                break;
+            }
+            j = j + 1;
+        }
+
+        i = i + 1;
     }
 
-    printf("\nAGE STATISTICS\n");
-    printf("====================================\n");
-    printf("Average Age: %.1f years\n", (float)ageSum / patientCount);
-    printf("Youngest:    %d years\n", minAge);
-    printf("Oldest:      %d years\n", maxAge);
+    avgAge = (float)totalAge / patientCount;
+
+    /* Display statistics */
+    printf("\nTotal Patients: %d\n", patientCount);
+    printf("\n--- Gender Distribution ---\n");
+    printf("Male: %d (%.2f%%)\n", maleCount, (float)maleCount * 100 / patientCount);
+    printf("Female: %d (%.2f%%)\n", femaleCount, (float)femaleCount * 100 / patientCount);
+
+    printf("\n--- Age Statistics ---\n");
+    printf("Minimum Age: %d\n", minAge);
+    printf("Maximum Age: %d\n", maxAge);
+    printf("Average Age: %.2f\n", avgAge);
+
+    printf("\n--- Blood Group Distribution ---\n");
+    i = 0;
+    while(i < 8) {
+        if(bloodCounts[i] > 0) {
+            printf("%s: %d patients (%.2f%%)\n",
+                   bloodGroups[i],
+                   bloodCounts[i],
+                   (float)bloodCounts[i] * 100 / patientCount);
+        }
+        i = i + 1;
+    }
+
+    pressEnter();
 }
 
-void generateDoctorSchedule() {
-    showHeader("DOCTOR SCHEDULE");
+void generateDoctorSchedule(void) {
+    int i;
+    int j;
+    int docId;
+    int docIndex;
+    int appointmentFound;
+    int patIndex;
 
-    // Check if doctors exist
     if(doctorCount == 0) {
-        printf("\nNo doctors in database!\n");
+        printf("\nNo doctor data available!\n");
+        pressEnter();
         return;
     }
 
-    printf("\nDOCTOR AVAILABILITY & APPOINTMENTS\n");
-    printf("=================================================================\n\n");
+    printf("\n--- Doctor Schedule Report ---\n");
 
-    int i, j;
+    i = 0;
+    while(i < doctorCount) {
+        docId = doctors[i].id;
 
-    // Loop through each doctor
-    for(i = 0; i < doctorCount; i = i + 1) {
-        printf("Dr. %s (%s)\n", doctors[i].name, doctors[i].specialization);
-        printf("Contact: %s | Fee: $%.2f\n", doctors[i].contact,
-               doctors[i].consultationFee);
+        printf("\n--- Dr. %s (ID: %d) ---\n", doctors[i].name, docId);
+        printf("Specialization: %s\n", doctors[i].specialization);
 
-        // Count appointments for this doctor
-        int apptCount = 0;
-        printf("Appointments:\n");
+        appointmentFound = 0;
+        j = 0;
 
-        for(j = 0; j < appointmentCount; j = j + 1) {
-            if(appointments[j].doctorId == doctors[i].id) {
-                // Find patient name
-                char pname[50] = "Unknown";
-                int k;
-                for(k = 0; k < patientCount; k = k + 1) {
-                    if(patients[k].id == appointments[j].patientId) {
-                        strcpy(pname, patients[k].name);
-                        break;
-                    }
+        while(j < appointmentCount) {
+            if(appointments[j].doctorId == docId) {
+                if(appointmentFound == 0) {
+                    printf("\nAppointments:\n");
+                    printf("%-15s %-12s %-10s %-15s\n",
+                           "Patient", "Date", "Time", "Status");
+                    printf("-----------------------------------------------------\n");
+                    appointmentFound = 1;
                 }
 
-                printf("  - %s at %s on %s [%s]\n",
-                       pname,
-                       appointments[j].time,
-                       appointments[j].date,
-                       appointments[j].status);
-                apptCount = apptCount + 1;
+                patIndex = searchPatientByID(appointments[j].patientId);
+
+                if(patIndex != -1) {
+                    printf("%-15s %-12s %-10s %-15s\n",
+                           patients[patIndex].name,
+                           appointments[j].date,
+                           appointments[j].time,
+                           appointments[j].status);
+                } else {
+                    printf("%-15s %-12s %-10s %-15s\n",
+                           "Unknown",
+                           appointments[j].date,
+                           appointments[j].time,
+                           appointments[j].status);
+                }
             }
+            j = j + 1;
         }
 
-        if(apptCount == 0) {
-            printf("  No appointments scheduled\n");
+        if(appointmentFound == 0) {
+            printf("No appointments scheduled.\n");
         }
 
-        printf("Total Appointments: %d\n", apptCount);
-        printf("---------------------------------------------------------------\n");
+        i = i + 1;
     }
+
+    pressEnter();
 }
 
-void generateRevenueReport() {
-    showHeader("REVENUE REPORT");
+void generateRevenueReport(void) {
+    int i;
+    int j;
+    float totalRevenue;
+    float doctorRevenue[MAX_DOCTORS];
+    int doctorPatientCount[MAX_DOCTORS];
+    int docIndex;
 
-    // Check if records exist
     if(recordCount == 0) {
-        printf("\nNo medical records available!\n");
+        printf("\nNo revenue data available!\n");
+        pressEnter();
         return;
     }
 
-    printf("\nFINANCIAL SUMMARY\n");
-    printf("====================================\n\n");
+    printf("\n--- Revenue Report ---\n");
 
-    // Calculate total revenue
-    float totalRevenue = 0;
-    int i;
+    /* Initialize arrays */
+    i = 0;
+    while(i < doctorCount) {
+        doctorRevenue[i] = 0;
+        doctorPatientCount[i] = 0;
+        i = i + 1;
+    }
 
-    for(i = 0; i < recordCount; i = i + 1) {
+    totalRevenue = 0;
+
+    /* Calculate revenue */
+    i = 0;
+    while(i < recordCount) {
         totalRevenue = totalRevenue + records[i].treatmentCost;
-    }
 
-    printf("Total Revenue: $%.2f\n", totalRevenue);
-    printf("Total Treatments: %d\n", recordCount);
-    printf("Average Treatment Cost: $%.2f\n\n", totalRevenue / recordCount);
+        docIndex = searchDoctorByID(records[i].doctorId);
 
-    // Revenue by doctor
-    printf("REVENUE BY DOCTOR\n");
-    printf("====================================\n");
-
-    int j;
-    for(i = 0; i < doctorCount; i = i + 1) {
-        float doctorRevenue = 0;
-
-        // Calculate revenue for this doctor
-        for(j = 0; j < recordCount; j = j + 1) {
-            if(records[j].doctorId == doctors[i].id) {
-                doctorRevenue = doctorRevenue + records[j].treatmentCost;
-            }
+        if(docIndex != -1) {
+            doctorRevenue[docIndex] = doctorRevenue[docIndex] + records[i].treatmentCost;
+            doctorPatientCount[docIndex] = doctorPatientCount[docIndex] + 1;
         }
 
-        if(doctorRevenue > 0) {
-            printf("Dr. %-20s: $%10.2f (%.1f%%)\n",
+        i = i + 1;
+    }
+
+    /* Display revenue report */
+    printf("\nTotal Revenue: Rs. %.2f\n", totalRevenue);
+    printf("Total Medical Records: %d\n", recordCount);
+
+    printf("\n--- Revenue by Doctor ---\n");
+    printf("%-20s %-15s %-15s %-15s\n",
+           "Doctor Name", "Patients", "Revenue", "Avg/Patient");
+    printf("--------------------------------------------------------------------\n");
+
+    i = 0;
+    while(i < doctorCount) {
+        if(doctorPatientCount[i] > 0) {
+            printf("%-20s %-15d Rs. %-12.2f Rs. %-12.2f\n",
                    doctors[i].name,
-                   doctorRevenue,
-                   (doctorRevenue / totalRevenue) * 100);
+                   doctorPatientCount[i],
+                   doctorRevenue[i],
+                   doctorRevenue[i] / doctorPatientCount[i]);
         }
+        i = i + 1;
     }
 
-    // Appointment statistics
+    /* Appointment statistics */
     int scheduledCount = 0;
     int completedCount = 0;
     int cancelledCount = 0;
 
-    for(i = 0; i < appointmentCount; i = i + 1) {
+    i = 0;
+    while(i < appointmentCount) {
         if(strcmp(appointments[i].status, "Scheduled") == 0) {
             scheduledCount = scheduledCount + 1;
-        }
-        else if(strcmp(appointments[i].status, "Completed") == 0) {
+        } else if(strcmp(appointments[i].status, "Completed") == 0) {
             completedCount = completedCount + 1;
-        }
-        else if(strcmp(appointments[i].status, "Cancelled") == 0) {
+        } else if(strcmp(appointments[i].status, "Cancelled") == 0) {
             cancelledCount = cancelledCount + 1;
         }
+        i = i + 1;
     }
 
-    printf("\nAPPOINTMENT STATISTICS\n");
-    printf("====================================\n");
+    printf("\n--- Appointment Summary ---\n");
     printf("Total Appointments: %d\n", appointmentCount);
-    printf("Scheduled:          %d\n", scheduledCount);
-    printf("Completed:          %d\n", completedCount);
-    printf("Cancelled:          %d\n", cancelledCount);
+    printf("Scheduled: %d\n", scheduledCount);
+    printf("Completed: %d\n", completedCount);
+    printf("Cancelled: %d\n", cancelledCount);
+
+    pressEnter();
 }

@@ -1,119 +1,54 @@
 # depslib dependency file v1.0
-1761276257 source:c:\users\qbits\onedrive\desktop\prototype_hms\appointment.c
-	"hospital.h"
-
-1761274752 c:\users\qbits\onedrive\desktop\prototype_hms\hospital.h
+1762223449 source:c:\users\qbits\downloads\hospital-management-system\patient.c
 	<stdio.h>
-	<stdlib.h>
 	<string.h>
 	<ctype.h>
 
-1761274878 source:c:\users\qbits\onedrive\desktop\prototype_hms\doctor.c
+1762223449 source:c:\users\qbits\downloads\hospital-management-system\simple_hospital.c
 	"hospital.h"
 
-1761274901 source:c:\users\qbits\onedrive\desktop\prototype_hms\fileops.c
-	"hospital.h"
-
-1761275888 source:c:\users\qbits\onedrive\desktop\prototype_hms\main.c
-	"hospital.h"
-
-1761274874 source:c:\users\qbits\onedrive\desktop\prototype_hms\patient.c
-	"hospital.h"
-
-1761274741 source:c:\users\qbits\onedrive\desktop\prototype_hms\records.c
-	"hospital.h"
-
-1761274742 source:c:\users\qbits\onedrive\desktop\prototype_hms\reports.c
-	"hospital.h"
-
-1761274904 source:c:\users\qbits\onedrive\desktop\prototype_hms\utils.c
-	"hospital.h"
-
-1761745276 source:g:\new folder (2)\wormhole 874rq7\appointment.c
-	"hospital.h"
-
-1761745802 g:\new folder (2)\wormhole 874rq7\hospital.h
+1762225445 c:\users\qbits\downloads\hospital-management-system\hospital.h
 	<stdio.h>
 	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<time.h>
+	<stdarg.h>
+
+1762223449 source:c:\users\qbits\downloads\hospital-management-system\utils.c
+	"hospital.h"
+
+1762223449 source:c:\users\qbits\downloads\hospital-management-system\validation.c
+	<stdio.h>
 	<string.h>
 	<ctype.h>
 
-1761649918 source:g:\new folder (2)\wormhole 874rq7\doctor.c
-	"hospital.h"
-
-1761649918 source:g:\new folder (2)\wormhole 874rq7\fileops.c
-	"hospital.h"
-
-1761649918 source:g:\new folder (2)\wormhole 874rq7\patient.c
-	"hospital.h"
-
-1761649918 source:g:\new folder (2)\wormhole 874rq7\records.c
-	"hospital.h"
-
-1761649918 source:g:\new folder (2)\wormhole 874rq7\reports.c
-	"hospital.h"
-
-1761745101 source:g:\new folder (2)\wormhole 874rq7\utils.c
-	"hospital.h"
-
-1761745196 source:g:\new folder (2)\wormhole 874rq7\main.c
-	"hospital.h"
-
-1761788458 source:d:\ai\wormhole 874rq7\doctor.c
-	"hospital.h"
-
-1761789647 d:\ai\wormhole 874rq7\hospital.h
+1762224246 source:c:\users\qbits\downloads\hospital-management-system\appointment.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
-
-1761788685 source:d:\ai\wormhole 874rq7\fileops.c
+	<stdbool.h>
+	<time.h>
 	"hospital.h"
 
-1761788772 source:d:\ai\wormhole 874rq7\patient.c
+1762224299 source:c:\users\qbits\downloads\hospital-management-system\doctor.c
+	<stdio.h>
+	<string.h>
+	<stdbool.h>
 	"hospital.h"
 
-1761788579 source:d:\ai\wormhole 874rq7\records.c
-	"hospital.h"
-
-1761788692 source:d:\ai\wormhole 874rq7\reports.c
-	"hospital.h"
-
-1761793471 source:d:\ai\wormhole 874rq7\main.c
-	"hospital.h"
-
-1761793061 source:d:\ai\wormhole 874rq7\appointment.c
-	"hospital.h"
-
-1761788710 source:d:\ai\wormhole 874rq7\utils.c
-	"hospital.h"
-
-1761836232 source:c:\users\qbits\onedrive\desktop\wormhole 874rq7\appointment.c
-	"hospital.h"
-
-1761835927 c:\users\qbits\onedrive\desktop\wormhole 874rq7\hospital.h
+1762223448 source:c:\users\qbits\downloads\hospital-management-system\fileops.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
-
-1761836243 source:c:\users\qbits\onedrive\desktop\wormhole 874rq7\doctor.c
 	"hospital.h"
 
-1761788685 source:c:\users\qbits\onedrive\desktop\wormhole 874rq7\fileops.c
+1762224164 source:c:\users\qbits\downloads\hospital-management-system\main.c
 	"hospital.h"
 
-1761835927 source:c:\users\qbits\onedrive\desktop\wormhole 874rq7\main.c
+1762224663 source:c:\users\qbits\downloads\hospital-management-system\records.c
 	"hospital.h"
-
-1761788772 source:c:\users\qbits\onedrive\desktop\wormhole 874rq7\patient.c
-	"hospital.h"
-
-1761788579 source:c:\users\qbits\onedrive\desktop\wormhole 874rq7\records.c
-	"hospital.h"
-
-1761788692 source:c:\users\qbits\onedrive\desktop\wormhole 874rq7\reports.c
-	"hospital.h"
-
-1761835927 source:c:\users\qbits\onedrive\desktop\wormhole 874rq7\utils.c
-	"hospital.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
 
